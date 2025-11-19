@@ -45,7 +45,7 @@ title: Chatbot
 
   <main class="chat-area" id="chatArea" role="main">
     <div class="chat-shell">
-      <!-- WRAPPER enables native panning/scrolling on mobile -->
+      <!-- WRAPPER: on mobile this box keeps the same visible size and allows horizontal panning -->
       <div class="iframe-wrap" id="iframeWrap" tabindex="0" aria-label="Chat iframe wrapper">
         <iframe id="chatFrame"
                 src="https://udify.app/chatbot/sI7tIcJbUKYk9pHy"
@@ -62,7 +62,10 @@ title: Chatbot
 <button id="fab" class="fab" aria-label="Open info">❔</button>
 
 <style>
+/* ---------- Configurable sizes ---------- */
 :root{
+  --embed-width: 1000px;   /* inner iframe width on mobile (change if needed) */
+  --embed-height: 700px;   /* visible box height (same as previous chatbot) */
   --bg-1: #0f172a; --bg-2: #0b1226;
   --text: #e6eef8; --muted: #9aa6b2; --accent: #60a5fa;
   --glass: rgba(255,255,255,0.06); --radius:14px;
@@ -108,22 +111,23 @@ body{
   overflow:hidden;
   display:flex; flex-direction:column;
 }
-/* the wrapper provides native scrolling on touch devices */
+
+/* wrapper provides a fixed visible box and native scrolling; desktop shows full-width iframe */
 .iframe-wrap{
   width:100%;
-  height:700px;
-  overflow:auto;                /* show scroll when iframe is larger than wrapper */
-  -webkit-overflow-scrolling: touch; /* smooth momentum scrolling on iOS */
   border-radius:10px;
   background:transparent;
-  outline: none;
+  overflow:auto;                /* enables horizontal & vertical scroll */
+  -webkit-overflow-scrolling: touch;
+  outline:none;
+  display:block;
 }
 
-/* Desktop: iframe fills container */
+/* desktop: iframe fills container */
 .iframe-wrap iframe{
   display:block;
   width:100%;
-  height:100%;
+  height:700px;
   border:0;
   border-radius:10px;
   background:transparent;
@@ -133,7 +137,7 @@ body{
 /* FAB */
 .fab{position:fixed;right:18px;bottom:22px;z-index:60;border:0;background:linear-gradient(135deg,var(--accent), #7dd3fc 90%);color:#042a2b;padding:12px 14px;border-radius:999px;box-shadow:0 10px 30px rgba(2,6,23,0.35);cursor:pointer;display:none}
 
-/* MOBILE ADJUSTMENTS: enable panning by making the iframe wider than the wrapper */
+/* ---------- MOBILE: fixed-height fit box + wide iframe for horizontal panning ---------- */
 @media (max-width:900px){
   body{padding:12px}
   .layout{grid-template-columns:1fr;gap:12px;margin-bottom:80px}
@@ -142,17 +146,28 @@ body{
     box-shadow:0 30px 60px rgba(2,6,23,0.6); display:block; height:calc(100vh - 96px); overflow:auto;
   }
   .meta.open{transform:translateX(0)}
-  .chat-shell{min-height:unset; height: calc(100vh - 120px); padding:8px}
-  /* KEY: wrapper fills viewport height; iframe intentionally larger to allow scrolling */
-  .iframe-wrap{height:100%; overflow:auto; -webkit-overflow-scrolling: touch}
-  /* make iframe larger than viewport so horizontal scroll becomes available.
-     1200px is a safe width for many web apps; adjust if you want more/less */
-  .iframe-wrap iframe{
-    width:1200px;          /* larger than mobile viewport → horizontal scroll */
-    max-width:none;
-    height:100%;
-    border-radius:6px;
+  .chat-shell{min-height:unset; height:auto; padding:8px}
+
+  /* FIX: visible box is fixed height (same as previous chatbot). The iframe is wider than the box,
+     which allows horizontal scrolling inside the box. */
+  .iframe-wrap{
+    height: var(--embed-height);  /* visible fit box height */
+    max-height: var(--embed-height);
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius:8px;
   }
+
+  /* Inner iframe intentionally larger than the box to enable left<->right scrolling.
+     Set --embed-width to control how wide the embedded app is (default 1000px). */
+  .iframe-wrap iframe{
+    width: var(--embed-width);
+    height: 100%;
+    max-width: none;
+    border-radius:6px;
+    display:block;
+  }
+
   .controls{gap:6px}
   .fab{display:block}
   .site-header{margin-bottom:8px}
@@ -209,7 +224,7 @@ body{
     catch(e){ alert('Copy failed — please copy the URL manually.'); }
   });
 
-  // Accessibility: focus the scrollable wrapper so keyboard users can scroll it
+  // Keyboard panning for accessibility
   const wrap = document.getElementById('iframeWrap');
   if(wrap) wrap.addEventListener('keydown', (e)=>{
     if(e.key === 'ArrowDown') { wrap.scrollBy({top:100, behavior:'smooth'}); e.preventDefault(); }
