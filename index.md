@@ -80,7 +80,7 @@ html,body{height:100%}
 body{
   margin:0;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  color: #e6eef8;
+  color: #7c7c7f;
   background: linear-gradient(160deg,var(--bg-1),var(--bg-2));
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
@@ -265,6 +265,7 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   });
 })();
 </script>
+
 
 
 
