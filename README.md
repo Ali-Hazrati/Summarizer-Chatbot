@@ -5,7 +5,7 @@ Hey! Here I've built my first AI chatbot project by generating a chatbot using d
 Here's the Github webpage link: https://ali-hazrati.github.io/Summarizer-Chatbot
 
 
-And here's the direct link of the chatbot: https://udify.app/chat/sI7tIcJbUKYk9pHy
+And here's the direct link of the chatbot: https://udify.app/chat/jl58pHuzmbbuaBib
 
 
 I also left the instructions I gave to the bot at Summarize My Paper.yml file so you can build it yourself from scratch at dify.ai
